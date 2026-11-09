@@ -19,6 +19,29 @@ interface FloatingNavProps {
 export default function FloatingNav({ onOpenRSVP }: FloatingNavProps = {}) {
   const [shareModalOpen, setShareModalOpen] = useState(false);
 
+  const handleShare = async () => {
+    const shareUrl = "https://marage-inv.vercel.app/";
+    const shareTitle = "P. ஸ்ரீ ராமச்சந்திரன் & S. கோபிகா | திருமண அழைப்பிதழ்";
+    const shareText = "P. ஸ்ரீ ராமச்சந்திரன் & S. கோபிகா திருமண அழைப்பிதழ் 🌸\n20-11-2026 வெள்ளிக்கிழமை அம்மாபேட்டை பட்டீஸ்வரர் கோவில் திருமணம் & அயோத்தியாப்பட்டணம் மண்டபத்தில் வரவேற்பு.\n\nஅழைப்பிதழ் இணையதளம் காண:";
+
+    // Direct Web Share with URL so WhatsApp & social media display the rich web front screen card with link
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
+        });
+        return;
+      } catch (err: any) {
+        if (err?.name === "AbortError") return;
+      }
+    }
+
+    // Fallback for desktop / unsupported browsers: open Share Dialog
+    setShareModalOpen(true);
+  };
+
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -88,10 +111,10 @@ export default function FloatingNav({ onOpenRSVP }: FloatingNavProps = {}) {
 
         <div className="w-px h-5 bg-[#f2c06e]/30 mx-0.5" />
 
-        {/* Share Button: Opens dedicated Share Dialog with Image & Link */}
+        {/* Share Button: Shares website link with rich web preview card */}
         <button
           type="button"
-          onClick={() => setShareModalOpen(true)}
+          onClick={handleShare}
           className="p-2 rounded-full text-[#ffdfaf] hover:text-[#f2c06e] hover:bg-[#6b0508]/60 transition-all cursor-pointer"
           title="அழைப்பிதழைப் பகிர்க (Share Invitation)"
         >

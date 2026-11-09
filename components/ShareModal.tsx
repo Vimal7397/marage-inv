@@ -31,20 +31,10 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
 
   if (!isOpen) return null;
 
-  // 1. Share via native sheet with image file + link caption
+  // 1. Share via native sheet with web link URL (unfurls the web front screen card with link)
   const handleNativeShare = async () => {
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
-        if (cachedFile && navigator.canShare && navigator.canShare({ files: [cachedFile] })) {
-          await navigator.share({
-            title: shareTitle,
-            text: shareText,
-            files: [cachedFile],
-          });
-          onClose();
-          return;
-        }
-
         await navigator.share({
           title: shareTitle,
           text: shareText,
@@ -63,9 +53,10 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
 
   // 2. Share directly to WhatsApp with pre-composed text & link
   const handleWhatsAppShare = () => {
-    const encoded = encodeURIComponent(shareText);
+    const encoded = encodeURIComponent(`${shareText}\n\n${shareUrl}`);
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encoded}`;
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    onClose();
   };
 
   // 3. Download the official invitation card image directly
@@ -152,7 +143,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
             }}
           >
             <MessageCircle className="w-4 h-4 fill-current" />
-            <span>வாட்ஸ்அப்பில் படம் + லிங்க் பகிர • Share on WhatsApp</span>
+            <span>இணையதள அழைப்பிதழைப் பகிர • Share Web Link on WhatsApp</span>
           </button>
 
           {/* Download Image Button */}
