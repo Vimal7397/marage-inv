@@ -22,18 +22,42 @@ export default function FloatingNav({ onOpenRSVP }: FloatingNavProps) {
   const handleShare = async () => {
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
+        const shareUrl = "https://marage-inv.vercel.app/";
+        const shareTitle = "P. ஸ்ரீ ராமச்சந்திரன் & S. கோபிகா திருமண அழைப்பிதழ்";
+        const shareText = "20-11-2026 வெள்ளிக்கிழமை அம்மாபேட்டை பட்டீஸ்வரர் கோவில் & அயோத்தியாப்பட்டணம் திருமண நிகழ்விற்கு அன்புடன் அழைக்கின்றோம்!\n\n" + shareUrl;
+
+        // Try to attach the invitation image if supported by the browser (mobile Chrome, Safari, etc.)
+        if (navigator.canShare) {
+          try {
+            const response = await fetch("/images/invitation-share.jpg");
+            const blob = await response.blob();
+            const file = new File([blob], "wedding-invitation.jpg", { type: "image/jpeg" });
+
+            if (navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                title: shareTitle,
+                text: shareText,
+                files: [file],
+              });
+              return;
+            }
+          } catch {
+            // fallback to standard URL sharing if file sharing fails
+          }
+        }
+
         await navigator.share({
-          title: "P. ஸ்ரீ ராமச்சந்திரன் & S. கோபிகா திருமண அழைப்பிதழ்",
-          text: "20-11-2026 வெள்ளிக்கிழமை அம்மாபேட்டை பட்டீஸ்வரர் கோவில் & அயோத்தியாப்பட்டணம் திருமண நிகழ்விற்கு அன்புடன் அழைக்கின்றோம்!",
-          url: window.location.href,
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
         });
         return;
       } catch {
-        // Fall back to copy
+        // User cancelled or share failed, fallback to copy
       }
     }
     if (typeof navigator !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText("https://marage-inv.vercel.app/");
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
