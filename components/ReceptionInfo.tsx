@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Calendar, Heart, Clock } from "lucide-react";
 
 interface ReceptionInfoProps {
-  onOpenRSVP: () => void;
+  onOpenRSVP?: () => void;
 }
 
-export default function ReceptionInfo({ onOpenRSVP }: ReceptionInfoProps) {
+export default function ReceptionInfo({ onOpenRSVP }: ReceptionInfoProps = {}) {
   // Wedding Muhurtham date: November 20, 2026 at 04:30 AM IST
   const weddingDate = new Date("2026-11-20T04:30:00").getTime();
 
@@ -380,25 +380,6 @@ END:VCALENDAR`;
           style={{ width: "calc(0.65986 * var(--st-w))" }}
           loading="lazy"
         />
-
-        {/* CONFIRM ATTENDANCE Action Button */}
-        <div className="flex flex-col items-center justify-center w-full">
-          <button
-            type="button"
-            onClick={onOpenRSVP}
-            className="group relative inline-flex items-center justify-center rounded-full px-8 py-3 text-[13px] md:text-[15px] uppercase font-bold tracking-[0.05em] transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
-            style={{
-              backgroundColor: "#f2c06e",
-              color: "#6b0508",
-              boxShadow: "0 6px 20px rgba(242, 192, 110, 0.4)",
-            }}
-          >
-            <span className="flex items-center gap-2 font-tamil">
-              <Heart className="w-4 h-4 fill-current text-[#6b0508]" />
-              <span>வருகையை உறுதிப்படுத்த &bull; CONFIRM ATTENDANCE</span>
-            </span>
-          </button>
-        </div>
       </div>
     </section>
   );
