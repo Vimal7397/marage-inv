@@ -15,7 +15,6 @@ import ScheduleTimeline from "@/components/ScheduleTimeline";
 import FamilySection from "@/components/FamilySection";
 import GuestbookSection from "@/components/GuestbookSection";
 import Footer from "@/components/Footer";
-import RSVPModal from "@/components/RSVPModal";
 
 function QueryParamSync({ onOpen }: { onOpen: () => void }) {
   const searchParams = useSearchParams();
@@ -33,7 +32,6 @@ function QueryParamSync({ onOpen }: { onOpen: () => void }) {
 export default function WeddingInvitationPage() {
   // Check URL synchronously on mount
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
-  const [rsvpModalOpen, setRsvpModalOpen] = useState(false);
   const [playMusicTrigger, setPlayMusicTrigger] = useState(false);
 
   useEffect(() => {
@@ -67,13 +65,7 @@ export default function WeddingInvitationPage() {
       <MusicPlayer autoPlayTrigger={playMusicTrigger} />
 
       {/* Floating Bottom Navigation Bar */}
-      <FloatingNav onOpenRSVP={() => setRsvpModalOpen(true)} />
-
-      {/* RSVP Modal Dialog */}
-      <RSVPModal
-        isOpen={rsvpModalOpen}
-        onClose={() => setRsvpModalOpen(false)}
-      />
+      <FloatingNav />
 
       {/* Main Wedding Invitation Card */}
       <div className="relative z-10 flex w-full justify-center overflow-x-clip py-0 md:py-8">
@@ -109,7 +101,7 @@ export default function WeddingInvitationPage() {
           <PhotoGallery />
 
           {/* 4. Reception Info, Live Countdown & Calendar */}
-          <ReceptionInfo onOpenRSVP={() => setRsvpModalOpen(true)} />
+          <ReceptionInfo />
 
           {/* 5. Venue Map & Directions */}
           <VenueMap />

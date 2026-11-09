@@ -13,10 +13,10 @@ import {
 import ShareModal from "./ShareModal";
 
 interface FloatingNavProps {
-  onOpenRSVP: () => void;
+  onOpenRSVP?: () => void;
 }
 
-export default function FloatingNav({ onOpenRSVP }: FloatingNavProps) {
+export default function FloatingNav({ onOpenRSVP }: FloatingNavProps = {}) {
   const [shareModalOpen, setShareModalOpen] = useState(false);
 
   const scrollTo = (id: string) => {
@@ -87,20 +87,6 @@ export default function FloatingNav({ onOpenRSVP }: FloatingNavProps) {
         </button>
 
         <div className="w-px h-5 bg-[#f2c06e]/30 mx-0.5" />
-
-        {/* RSVP Action */}
-        <button
-          type="button"
-          onClick={onOpenRSVP}
-          className="px-3.5 py-1.5 rounded-full font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:scale-105 active:scale-95 shadow-md flex items-center gap-1.5 cursor-pointer font-tamil"
-          style={{
-            backgroundColor: "#f2c06e",
-            color: "#6b0508",
-          }}
-        >
-          <Heart className="w-3.5 h-3.5 fill-current text-[#6b0508]" />
-          <span>RSVP</span>
-        </button>
 
         {/* Share Button: Opens dedicated Share Dialog with Image & Link */}
         <button
