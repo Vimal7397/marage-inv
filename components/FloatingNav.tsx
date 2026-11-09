@@ -7,61 +7,17 @@ import {
   Heart,
   MessageCircle,
   Share2,
-  Check,
   MapPin,
   Users,
 } from "lucide-react";
+import ShareModal from "./ShareModal";
 
 interface FloatingNavProps {
   onOpenRSVP: () => void;
 }
 
 export default function FloatingNav({ onOpenRSVP }: FloatingNavProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleShare = async () => {
-    if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        const shareUrl = "https://marage-inv.vercel.app/";
-        const shareTitle = "P. ஸ்ரீ ராமச்சந்திரன் & S. கோபிகா திருமண அழைப்பிதழ்";
-        const shareText = "20-11-2026 வெள்ளிக்கிழமை அம்மாபேட்டை பட்டீஸ்வரர் கோவில் & அயோத்தியாப்பட்டணம் திருமண நிகழ்விற்கு அன்புடன் அழைக்கின்றோம்!\n\n" + shareUrl;
-
-        // Try to attach the invitation image if supported by the browser (mobile Chrome, Safari, etc.)
-        if (navigator.canShare) {
-          try {
-            const response = await fetch("/images/invitation-share.jpg");
-            const blob = await response.blob();
-            const file = new File([blob], "wedding-invitation.jpg", { type: "image/jpeg" });
-
-            if (navigator.canShare({ files: [file] })) {
-              await navigator.share({
-                title: shareTitle,
-                text: shareText,
-                files: [file],
-              });
-              return;
-            }
-          } catch {
-            // fallback to standard URL sharing if file sharing fails
-          }
-        }
-
-        await navigator.share({
-          title: shareTitle,
-          text: shareText,
-          url: shareUrl,
-        });
-        return;
-      } catch {
-        // User cancelled or share failed, fallback to copy
-      }
-    }
-    if (typeof navigator !== "undefined") {
-      navigator.clipboard.writeText("https://marage-inv.vercel.app/");
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -146,20 +102,22 @@ export default function FloatingNav({ onOpenRSVP }: FloatingNavProps) {
           <span>RSVP</span>
         </button>
 
-        {/* Share Button */}
+        {/* Share Button: Opens dedicated Share Dialog with Image & Link */}
         <button
           type="button"
-          onClick={handleShare}
+          onClick={() => setShareModalOpen(true)}
           className="p-2 rounded-full text-[#ffdfaf] hover:text-[#f2c06e] hover:bg-[#6b0508]/60 transition-all cursor-pointer"
-          title={copied ? "Link Copied!" : "Share Invitation"}
+          title="அழைப்பிதழைப் பகிர்க (Share Invitation)"
         >
-          {copied ? (
-            <Check className="w-4 h-4 text-green-400" />
-          ) : (
-            <Share2 className="w-4 h-4 text-[#f2c06e]" />
-          )}
+          <Share2 className="w-4 h-4 text-[#f2c06e]" />
         </button>
       </nav>
+
+      {/* Share Modal Dialog with image preview, WhatsApp sharing & download */}
+      <ShareModal
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+      />
     </div>
   );
 }
